@@ -1,9 +1,12 @@
 package com.sinergise.io.reader;
 
-import com.sinergise.geometry.Geometry;
 import com.sinergise.geometry.LineString;
 import com.sinergise.geometry.Polygon;
+import com.sinergise.io.GeometryType;
 
+import java.util.ArrayList;
+import java.util.IllegalFormatException;
+import java.util.List;
 import java.util.StringTokenizer;
 
 /**
@@ -11,30 +14,32 @@ import java.util.StringTokenizer;
  */
 public class PolygonGeometryReader implements GeometryReader<Polygon> {
 
-    private final static String GEO_TYPE = "POLYGON";
-
     @Override
-    public Geometry readWkt(String wktStr) {
-        StringTokenizer tokenizer = new StringTokenizer(wktStr);
-        while (tokenizer.hasMoreTokens()) {
-            String token = tokenizer.nextToken();
-            if (token.equals(GEO_TYPE)) {
-                token = tokenizer.nextToken();
-            }
-            if (token.equals(EMPTY_IN_STR)) {
-                return new Polygon();
-            }
+    public Polygon readWktFromTokenizer(StringTokenizer tokenizer, String wktStr) throws IllegalFormatException {
+        if (wktStr.equals("POLYGON EMPTY")) {
+            return new Polygon();
+        }
+        String token = tokenizer.nextToken();
 
-
+        LineString outer = null;
+        List<LineString> holeList = new ArrayList<>();
+        LineString[] holes = null;
+        if (token.contains(GeometryType.POLYGON.toString())) {
 
             LineStringGeometryReader reader = new LineStringGeometryReader();
-            LineString outer = reader.readWktFromTokenizer(tokenizer, wktStr);
+            outer = reader.readWktFromTokenizer(tokenizer, wktStr);
 
-            return new Polygon(outer, null);
+            while (tokenizer.hasMoreTokens()) {
+                LineString hole = reader.readWktFromTokenizer(tokenizer, wktStr);
+                holeList.add(hole);
+            }
 
+            if (!holeList.isEmpty()) {
+                holes = new LineString[holeList.size()];
+            }
         }
 
-        return new Polygon();
-    }
+        return new Polygon(outer, holeList.isEmpty() ? null : holeList.toArray(holes));
 
+    }
 }

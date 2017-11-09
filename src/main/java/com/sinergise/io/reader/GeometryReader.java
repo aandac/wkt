@@ -1,7 +1,5 @@
 package com.sinergise.io.reader;
 
-import com.sinergise.geometry.Geometry;
-
 import java.util.IllegalFormatException;
 import java.util.StringTokenizer;
 
@@ -12,7 +10,10 @@ public interface GeometryReader<T> {
 
     String EMPTY_IN_STR = "EMPTY";
 
-    Geometry readWkt(String wktStr) throws IllegalFormatException;
+    default T readWkt(String wktStr) throws IllegalFormatException {
+        StringTokenizer tokenizer = new StringTokenizer(wktStr);
+        return readWktFromTokenizer(tokenizer, wktStr);
+    }
 
     default T readWktFromTokenizer(StringTokenizer tokenizer, String wktStr) throws IllegalFormatException {
         return null;

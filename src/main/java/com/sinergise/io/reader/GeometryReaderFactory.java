@@ -1,6 +1,5 @@
 package com.sinergise.io.reader;
 
-import com.sinergise.geometry.Geometry;
 import com.sinergise.io.GeometryType;
 
 /**
@@ -13,7 +12,7 @@ public final class GeometryReaderFactory {
 
     //    Point, LineString, Polygon, GeometryCollection, MultiPoint, MultiLineString ali MultiPolygon
 
-    public static Geometry getGeometry(String wktString) {
+    public static Object getGeometry(String wktString) {
         if (wktString == null) {
             return null;
         }
@@ -27,11 +26,11 @@ public final class GeometryReaderFactory {
             reader = new PolygonGeometryReader();
         } else if (wktString.startsWith("GEOMETRYCOLLECTION")) {
             reader = new GeometryCollectionGeometryReader();
-        } else if (wktString.startsWith("MULTIPOINT")) {
+        } else if (wktString.startsWith(GeometryType.MULTIPOINT.toString())) {
             reader = new MultiPointGeometryReader();
-        } else if (wktString.startsWith("MULTILINESTRING")) {
+        } else if (wktString.startsWith(GeometryType.MULTILINESTRING.toString())) {
             reader = new MultiLineStringGeometryReader();
-        } else if (wktString.startsWith("MULTIPOLYGON")) {
+        } else if (wktString.startsWith(GeometryType.MULTIPOLYGON.toString())) {
             reader = new MultiPolygonGeometryReader();
         } else {
             throw new IllegalArgumentException("Unsupported WKT string.Str=" + wktString);
