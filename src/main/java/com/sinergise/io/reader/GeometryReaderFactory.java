@@ -1,5 +1,6 @@
 package com.sinergise.io.reader;
 
+import com.sinergise.geometry.Geometry;
 import com.sinergise.io.GeometryType;
 
 /**
@@ -12,7 +13,7 @@ public final class GeometryReaderFactory {
 
     //    Point, LineString, Polygon, GeometryCollection, MultiPoint, MultiLineString ali MultiPolygon
 
-    public static Object getGeometry(String wktString) {
+    public static Geometry getGeometry(String wktString) {
         if (wktString == null) {
             return null;
         }
@@ -24,7 +25,7 @@ public final class GeometryReaderFactory {
             reader = new LineStringGeometryReader();
         } else if (wktString.startsWith(GeometryType.POLYGON.toString())) {
             reader = new PolygonGeometryReader();
-        } else if (wktString.startsWith("GEOMETRYCOLLECTION")) {
+        } else if (wktString.startsWith(GeometryType.GEOMETRYCOLLECTION.toString())) {
             reader = new GeometryCollectionGeometryReader();
         } else if (wktString.startsWith(GeometryType.MULTIPOINT.toString())) {
             reader = new MultiPointGeometryReader();

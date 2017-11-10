@@ -67,11 +67,19 @@ public class WKTReaderTest {
                 new Polygon(new LineString(new double[] { 15, 5, 40, 10, 10, 20, 5, 10, 15, 5 }), null) };
         assertEquals(new MultiPolygon(polygons), reader.read(wkt_multipoly_geo1));
 
-//        String wkt_multipoly_geo2 = "MULTIPOLYGON (((40 40, 20 45, 45 30, 40 40)), ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20)))";
-//        Polygon[] polygons2 = new Polygon[] { new Polygon(new LineString(new double[] { 40, 40, 20, 45, 45, 30, 40, 40 }), null),
-//                new Polygon(new LineString(new double[] { 20, 35, 10, 30, 10, 10, 30, 5, 45, 20, 20, 35 }),
-//                        new LineString[] { new LineString(new double[] { 30, 20, 20, 15, 20, 25, 30, 20 }) }) };
-//        assertEquals(new MultiPolygon(polygons2), reader.read(wkt_multipoly_geo2));
+        String wkt_multipoly_geo2 = "MULTIPOLYGON (((40 40, 20 45, 45 30, 40 40)), ((20 35, 10 30, 10 10, 30 5, 45 20, 20 35), (30 20, 20 15, 20 25, 30 20)))";
+        Polygon[] polygons2 = new Polygon[] { new Polygon(new LineString(new double[] { 40, 40, 20, 45, 45, 30, 40, 40 }), null),
+                new Polygon(new LineString(new double[] { 20, 35, 10, 30, 10, 10, 30, 5, 45, 20, 20, 35 }),
+                        new LineString[] { new LineString(new double[] { 30, 20, 20, 15, 20, 25, 30, 20 }) }) };
+        assertEquals(new MultiPolygon(polygons2), reader.read(wkt_multipoly_geo2));
+
+        String wkt_geo_empty_coll = "GEOMETRYCOLLECTION EMPTY";
+        assertEquals(new GeometryCollection<>(), reader.read(wkt_geo_empty_coll));
+
+        String wkt_geo_coll = "GEOMETRYCOLLECTION ( POINT (4 6), LINESTRING (4 6, 7 10))";
+        GeometryCollection<Geometry> collection = new GeometryCollection<>(
+                new Geometry[] { new Point(4, 6), new LineString(new double[] { 4, 6, 7, 10 }) });
+        assertEquals(collection, reader.read(wkt_geo_coll));
 
     }
 

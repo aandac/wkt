@@ -1,12 +1,9 @@
 package com.sinergise.io.reader;
 
-import com.sinergise.geometry.Geometry;
-import com.sinergise.geometry.LineString;
 import com.sinergise.geometry.MultiPolygon;
 import com.sinergise.geometry.Polygon;
 
 import java.util.ArrayList;
-import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -17,33 +14,35 @@ public class MultiPolygonGeometryReader implements GeometryReader<MultiPolygon> 
 
     @Override
     public MultiPolygon readWkt(String wktStr) {
-        StringTokenizer tokenizer = new StringTokenizer(wktStr);
 
         if (wktStr.equals("MULTIPOLYGON EMPTY")) {
             return new MultiPolygon();
         }
 
-        PolygonGeometryReader reader = new PolygonGeometryReader();
+        // Devide each polygon string into 1 polygon
+        wktStr = wktStr.replace("MULTIPOLYGON", "");
+        String[] polygonStr = wktStr.split("\\)\\),");
 
+        PolygonGeometryReader reader = new PolygonGeometryReader();
         Polygon[] polygons = null;
         List<Polygon> polygonList = new ArrayList<>();
-        while (tokenizer.hasMoreTokens()) {
+        for (int i = 0; i < polygonStr.length; i++) {
+            String poly = polygonStr[i];
+            if (!poly.endsWith(")))")) {
+                poly = poly + "))";
+            }
+            poly = "POLYGON " + poly;
 
-            LineStringGeometryReader lineReader = new LineStringGeometryReader();
-            LineString outer = lineReader.readWktFromTokenizer(tokenizer, wktStr);
-
-
+            StringTokenizer tokenizer = new StringTokenizer(poly);
             while (tokenizer.hasMoreTokens()) {
 
+                Polygon polygon = reader.readWktFromTokenizer(tokenizer, wktStr);
+                polygonList.add(polygon);
             }
-
-            polygonList.add(pol);
         }
-
         if (!polygonList.isEmpty()) {
             polygons = new Polygon[polygonList.size()];
         }
-
         return new MultiPolygon(polygonList.isEmpty() ? null : polygonList.toArray(polygons));
     }
 
