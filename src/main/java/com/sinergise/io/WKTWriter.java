@@ -4,6 +4,7 @@ import com.sinergise.geometry.Geometry;
 import com.sinergise.geometry.GeometryCollection;
 import com.sinergise.geometry.LineString;
 import com.sinergise.geometry.Point;
+import com.sinergise.io.writer.GeometryWriterFactory;
 
 public class WKTWriter {
 	
@@ -15,7 +16,6 @@ public class WKTWriter {
 	 * </code></pre>
 	 */
 	public String write(Geometry geom) {
-
-		return write(new GeometryCollection<Geometry>(new Geometry[]{new Point(4,6), new LineString(new double[] {4,6,7,10})}));
+		return GeometryWriterFactory.writeGeometry(geom);
 	}
 }
