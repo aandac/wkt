@@ -7,7 +7,7 @@ import com.sinergise.geometry.Polygon;
 /**
  * @author aandac  10/11/2017.
  */
-public class MultiPolygonGeometryWriter implements GeometryWriter<MultiPolygon> {
+public class MultiPolygonGeometryWriter extends BasePolygonGeometryWriter<MultiPolygon> {
 
     //MULTIPOLYGON (((30 20, 45 40, 10 40, 30 20)), ((15 5, 40 10, 10 20, 5 10, 15 5)))
     @Override
@@ -28,13 +28,8 @@ public class MultiPolygonGeometryWriter implements GeometryWriter<MultiPolygon> 
                 result = result + "((" + points + ")";
             }
 
-            if (polygon.getNumHoles() > 0) {
-                for (int j = 0; j < polygon.getNumHoles(); j++) {
-                    LineString lineString = polygon.getHole(j);
-                    String points = getCoordinates(lineString);
-                    result = result + ", (" + points + ")";
-                }
-            }
+            result = getHoles(polygon, result);
+
             result = result + "), ";
         }
 
@@ -43,11 +38,4 @@ public class MultiPolygonGeometryWriter implements GeometryWriter<MultiPolygon> 
         return result;
     }
 
-    private String getCoordinates(LineString outer) {
-        StringBuilder points = new StringBuilder();
-        for (int i = 0; i < outer.getNumCoords(); i++) {
-            points.append(format.format(outer.getX(i))).append(" ").append(format.format(outer.getY(i))).append(", ");
-        }
-        return points.toString().substring(0, points.length() - 2);
-    }
 }

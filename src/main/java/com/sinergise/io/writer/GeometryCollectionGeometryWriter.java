@@ -6,20 +6,20 @@ import com.sinergise.geometry.GeometryCollection;
 /**
  * @author aandac  10/11/2017.
  */
-public class GeometryCollectionGeometryWriter implements GeometryWriter<GeometryCollection> {
+public class GeometryCollectionGeometryWriter extends AbstractGeometryWriter<GeometryCollection> {
 
     @Override
     public String writeWkt(GeometryCollection geo) {
         String result = "GEOMETRYCOLLECTION EMPTY";
         if (!geo.isEmpty()) {
-            result = "GEOMETRYCOLLECTION ( ";
+            StringBuilder builder = new StringBuilder("GEOMETRYCOLLECTION ( ");
             for (int i = 0; i < geo.size(); i++) {
                 Geometry geometry = geo.get(i);
                 String wktGeo = GeometryWriterFactory.writeGeometry(geometry);
-                result = result + wktGeo + ", ";
+                builder.append(wktGeo).append(", ");
 
             }
-            result = result.substring(0, result.length() - 2) + ")";
+            result = builder.substring(0, builder.length() - 2) + ")";
 
         }
         return result;

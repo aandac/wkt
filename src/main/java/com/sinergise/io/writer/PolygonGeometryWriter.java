@@ -6,7 +6,7 @@ import com.sinergise.geometry.Polygon;
 /**
  * @author aandac  10/11/2017.
  */
-public class PolygonGeometryWriter implements GeometryWriter<Polygon> {
+public class PolygonGeometryWriter extends BasePolygonGeometryWriter<Polygon> {
 
     @Override
     public String writeWkt(Polygon geo) {
@@ -21,24 +21,12 @@ public class PolygonGeometryWriter implements GeometryWriter<Polygon> {
             result = "POLYGON ((" + points + ")";
         }
 
-        if (geo.getNumHoles() > 0) {
-            for (int i = 0; i < geo.getNumHoles(); i++) {
-                LineString lineString = geo.getHole(i);
-                String points = getCoordinates(lineString);
-                result = result+ ", (" + points + ")";
-            }
-        }
+        result = getHoles(geo, result);
 
         result = result + ")";
 
         return result;
     }
 
-    private String getCoordinates(LineString outer) {
-        StringBuilder points = new StringBuilder();
-        for (int i = 0; i < outer.getNumCoords(); i++) {
-            points.append(format.format(outer.getX(i))).append(" ").append(format.format(outer.getY(i))).append(", ");
-        }
-        return points.toString().substring(0, points.length() - 2);
-    }
+
 }
