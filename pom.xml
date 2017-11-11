@@ -28,6 +28,7 @@
         <dependency>
             <groupId>com.sinergise.io</groupId>
             <artifactId>sg-geometry</artifactId>
+            <version>1.0</version>
             <scope>system</scope>
             <systemPath>${project.basedir}/lib/sg_geometry.jar</systemPath>
         </dependency>

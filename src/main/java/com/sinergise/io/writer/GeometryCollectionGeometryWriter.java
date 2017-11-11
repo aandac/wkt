@@ -1,5 +1,6 @@
 package com.sinergise.io.writer;
 
+import com.sinergise.geometry.Geometry;
 import com.sinergise.geometry.GeometryCollection;
 
 /**
@@ -9,6 +10,18 @@ public class GeometryCollectionGeometryWriter implements GeometryWriter<Geometry
 
     @Override
     public String writeWkt(GeometryCollection geo) {
-        return null;
+        String result = "GEOMETRYCOLLECTION EMPTY";
+        if (!geo.isEmpty()) {
+            result = "GEOMETRYCOLLECTION ( ";
+            for (int i = 0; i < geo.size(); i++) {
+                Geometry geometry = geo.get(i);
+                String wktGeo = GeometryWriterFactory.writeGeometry(geometry);
+                result = result + wktGeo + ", ";
+
+            }
+            result = result.substring(0, result.length() - 2) + ")";
+
+        }
+        return result;
     }
 }

@@ -12,7 +12,7 @@ public class PointGeometryWriter implements GeometryWriter<Point> {
         String result = "POINT EMPTY";
 
         if (!geo.isEmpty()) {
-            result = String.format("POINT (%.0f %.0f)", geo.getX(), geo.getY());
+            result = "POINT (" + format.format(geo.getX()) + " " + format.format(geo.getY()) + ")";
         }
 
         return result;
